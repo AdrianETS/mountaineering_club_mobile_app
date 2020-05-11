@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, TextInput } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from 'react-native';
+import Dashboard from "./components/Dashboard";
+import LoginScreen from "./components/Login";
+import MembersList from './components/MembersList';
+import ExcursionView from "./components/ExcursionView";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -17,3 +17,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="ExcursionView" component={ExcursionView} />
+        <Stack.Screen name="Dashboard" component={Dashboard} />
+        <Stack.Screen name="List of Members" component={MembersList} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+
+export default App;
