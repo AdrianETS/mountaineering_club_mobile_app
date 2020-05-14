@@ -33,18 +33,19 @@ function getExcursionInfo(id) {
 function editExcursion(excursion) {
     return new Promise((resolve, reject) => {
         StorageProvider.getData("token")
-        .then(token => fetch('http://192.168.1.134:3001/excursions?token=' + token, {
-            method: 'PUT',
-            body: JSON.stringify({
-                _id: excursion._id,
-                name: excursion.name,
-                date: excursion.date,
-                users_id: excursion.users_id
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        }))
+            .then(token => fetch('http://192.168.1.134:3001/excursions?token=' + token, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    _id: excursion._id,
+                    name: excursion.name,
+                    date: excursion.date,
+                    users_id: excursion.users_id
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }))
+            .then(res => res.json())
             .then(json => resolve(json));
     })
 }
@@ -70,6 +71,10 @@ function addUserToExcursion(excursion) {
                 console.log("2Excursion ids: " + JSON.stringify(excursion));
                 return editExcursion(excursion)
             })
+            .then(excursion => {
+                console.log("edit excursion nos devuelve: " + JSON.stringify(excursion));
+                resolve(excursion);
+            })
     })
 }
 
@@ -84,9 +89,21 @@ function deleteUserFromExcursion(excursion) {
                 console.log("4Excursion ids: " + JSON.stringify(excursion));
                 return editExcursion(excursion)
             })
+            .then(excursion => resolve(excursion));
     })
 }
 
+function handleAdd(excursionInfo, onChangeexcursionInfo, onChangeuserIsAdded) {
+    addUserToExcursion(excursionInfo)
+        .then(updatedExcursion => onChangeexcursionInfo(updatedExcursion))
+        .then(() => onChangeuserIsAdded(true))
+}
+
+function handleDelete(excursionInfo, onChangeexcursionInfo, onChangeuserIsAdded) {
+    deleteUserFromExcursion(excursionInfo)
+        .then(updatedExcursion => onChangeexcursionInfo(updatedExcursion))
+        .then(() => onChangeuserIsAdded(false))
+}
 
 function ExcursionView({ route, navigation }) {
     const { _id } = route.params;
@@ -114,8 +131,8 @@ function ExcursionView({ route, navigation }) {
             <Text style={styles.item}>{excursionInfo.name}</Text>
             <Text style={styles.item}>{excursionInfo.date}</Text>
             {userIsAdded == null ? <Text></Text> : userIsAdded ?
-                <Button title="Delete" onPress={() => deleteUserFromExcursion(excursionInfo).then(updatedExcursion => onChangeexcursionInfo(updatedExcursion))} />
-                : <Button title="Add" onPress={() => addUserToExcursion(excursionInfo).then(updatedExcursion => onChangeexcursionInfo(updatedExcursion))} />}
+                <Button title="Delete" onPress={() => handleDelete(excursionInfo, onChangeexcursionInfo, onChangeuserIsAdded)} />
+                : <Button title="Add" onPress={() => handleAdd(excursionInfo, onChangeexcursionInfo, onChangeuserIsAdded)} />}
             <FlatList
                 data={excursionInfo && excursionInfo.members_info.map(member => member.name)}
                 renderItem={
