@@ -68,6 +68,7 @@ function LoginScreen({ navigation }) {
                 if (response.status == 200) {
                     StorageProvider.storeData("token", json.token)
                     .then(()=>StorageProvider.storeData("userName", json.userName))
+                    .then(()=>StorageProvider.storeData("_id", json._id))
                     .then(()=>resolve());
                 } else {
                     reject();
