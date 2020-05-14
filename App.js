@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard";
 import LoginScreen from "./components/Login";
 import MembersList from './components/MembersList';
 import ExcursionView from "./components/ExcursionView";
+import EditMemberInfo from "./components/EditMemberInfo";
 
 
 const styles = StyleSheet.create({
@@ -28,6 +29,7 @@ function App() {
         <Stack.Screen name="ExcursionView" component={ExcursionView} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="List of Members" component={MembersList} />
+        <Stack.Screen name="EditUserData" component={EditMemberInfo} />
       </Stack.Navigator>
     </NavigationContainer>
   );

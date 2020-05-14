@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import StorageProvider from "../services/StorageProvider";
 import MembersList from "./MembersList";
+import { getCurrentFrame } from 'expo/build/AR';
 
 
 const styles = StyleSheet.create({
@@ -18,6 +19,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     height: 44,
   },
+  button: {
+    backgroundColor: "green",
+    padding: 30
+  }
 });
 
 function getExcursionList() {
@@ -36,21 +41,29 @@ function onClickItem(id, navigation){
   navigation.navigate('ExcursionView', {_id: id});
 }
 
+function onClickEditMember(id, navigation){
+  navigation.navigate('EditUserData', {_id: id});
+}
+
 function Dashboard({ navigation }) {
 
   const [userName, onChangeUserName] = React.useState("");
+  const [userId, onChangeUserId] = React.useState("");
   const [excursionsList, onChangeexcursionList] = React.useState("");
   //useEfect es un hook que se ejecuta después del renderizado. Es equivalente al componentDidMount y componentDidUpdate
   React.useEffect(() => {
     StorageProvider.getData("userName")
       .then(value => onChangeUserName(value))
+      .then(()=> StorageProvider.getData("_id"))
+      .then(id =>onChangeUserId(id))
       .then(() => getExcursionList())
       .then(excursions => onChangeexcursionList(excursions));
   }, []);
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Welcome to dashboard: {userName}</Text>
+      <Text>Welcome to dashboard: {userName}{"\n"}</Text>
+      <Button title="Edit my data" onPress = {()=>onClickEditMember(userId, navigation)}/>
       <FlatList
         data={excursionsList}
         renderItem={
@@ -60,8 +73,9 @@ function Dashboard({ navigation }) {
               >
                <Text style={styles.item}>{item.name}</Text>
               </TouchableOpacity>}
-
+      
       />
+
     </View>
   );
 }
