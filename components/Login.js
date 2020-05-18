@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from 'react-native';
 import StorageProvider from "../services/StorageProvider";
+import Constants from "../utils/Constants";
 
 const styles = StyleSheet.create({
     container: {
@@ -52,7 +53,7 @@ function LoginScreen({ navigation }) {
   
   function doLogin(email, password){
     return new Promise((resolve, reject)=> {
-      fetch('http://192.168.1.134:3001/login', {
+      fetch(Constants.url + 'login', {
         method: 'POST',
         body: JSON.stringify({
             email: email,

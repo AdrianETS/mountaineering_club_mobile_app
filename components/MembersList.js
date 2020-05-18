@@ -3,6 +3,7 @@ import { Button, StyleSheet, Text, View, TextInput, SafeAreaView, FlatList } fro
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import StorageProvider from "../services/StorageProvider";
+import Constants from "../utils/Constants";
 
 
 const styles = StyleSheet.create({
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
 function getMemberList() {
     return new Promise((resolve, reject) => {
         StorageProvider.getData("token")
-            .then(token => fetch('http://192.168.1.134:3001/members/list?token=' + token))
+            .then(token => fetch(Constants.url + 'members/list?token=' + token))
             .then(res => res.json())
             .then((json) => resolve(json));
     })

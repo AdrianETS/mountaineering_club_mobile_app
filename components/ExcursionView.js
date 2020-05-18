@@ -3,6 +3,7 @@ import { Button, StyleSheet, Text, View, TextInput, SafeAreaView, FlatList, Touc
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import StorageProvider from "../services/StorageProvider";
+import Constants from "../utils/Constants";
 
 
 const styles = StyleSheet.create({
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
 function getExcursionInfo(id) {
     return new Promise((resolve, reject) => {
         StorageProvider.getData("token")
-            .then(token => fetch('http://192.168.1.134:3001/excursions/' + id + '?token=' + token))
+            .then(token => fetch(Constants.url + 'excursions/' + id + '?token=' + token))
             .then(res => res.json())
             .then((json) => {
                 resolve(json)
@@ -33,7 +34,7 @@ function getExcursionInfo(id) {
 function editExcursion(excursion) {
     return new Promise((resolve, reject) => {
         StorageProvider.getData("token")
-            .then(token => fetch('http://192.168.1.134:3001/excursions?token=' + token, {
+            .then(token => fetch(Constants.url + 'excursions?token=' + token, {
                 method: 'PUT',
                 body: JSON.stringify({
                     _id: excursion._id,

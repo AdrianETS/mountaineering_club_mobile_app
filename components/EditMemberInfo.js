@@ -3,11 +3,12 @@ import { Button, StyleSheet, Text, View, TextInput, SafeAreaView, FlatList, Touc
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import StorageProvider from "../services/StorageProvider";
+import Constants from "../utils/Constants";
 
 function getMemberInfo(id) {
     return new Promise((resolve, reject) => {
         StorageProvider.getData("token")
-            .then(token => fetch('http://192.168.1.134:3001/members/' + id + '?token=' + token))
+            .then(token => fetch(Constants.url + id + '?token=' + token))
             .then(res => res.json())
             .then(json => resolve(json))
     })
@@ -16,7 +17,7 @@ function getMemberInfo(id) {
 function editMember(member, navigation) {
     //return new Promise((resolve, reject) => {
         StorageProvider.getData("token")
-            .then(token => fetch('http://192.168.1.134:3001/members?token=' + token, {
+            .then(token => fetch(Constants.url + 'members?token=' + token, {
                 method: 'PUT',
                 body: JSON.stringify({
                     _id: member._id,

@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import StorageProvider from "../services/StorageProvider";
 import MembersList from "./MembersList";
 import { getCurrentFrame } from 'expo/build/AR';
+import Constants from "../utils/Constants";
 
 
 const styles = StyleSheet.create({
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
 function getExcursionList() {
   return new Promise((resolve, reject) => {
     StorageProvider.getData("token")
-      .then(token => fetch('http://192.168.1.134:3001/excursions/list?token=' + token))
+      .then(token => fetch(Constants.url + 'excursions/list?token=' + token))
         .then(res => res.json())
         .then((json) => {
           console.log(json);
