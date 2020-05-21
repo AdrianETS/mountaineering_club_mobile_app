@@ -6,6 +6,7 @@ import StorageProvider from "../services/StorageProvider";
 import MembersList from "./MembersList";
 import { getCurrentFrame } from 'expo/build/AR';
 import Constants from "../utils/Constants";
+import ApiService from "../services/ApiService";
 
 
 const styles = StyleSheet.create({
@@ -26,17 +27,7 @@ const styles = StyleSheet.create({
   }
 });
 
-function getExcursionList() {
-  return new Promise((resolve, reject) => {
-    StorageProvider.getData("token")
-      .then(token => fetch(Constants.url + 'excursions/list?token=' + token))
-        .then(res => res.json())
-        .then((json) => {
-          console.log(json);
-          resolve(json);
-        })
-  })
-}
+
 
 function onClickItem(id, navigation){
   navigation.navigate('ExcursionView', {_id: id});
@@ -57,7 +48,7 @@ function Dashboard({ navigation }) {
       .then(value => onChangeUserName(value))
       .then(()=> StorageProvider.getData("_id"))
       .then(id =>onChangeUserId(id))
-      .then(() => getExcursionList())
+      .then(() => ApiService.getExcursionList())
       .then(excursions => onChangeexcursionList(excursions));
   }, []);
 

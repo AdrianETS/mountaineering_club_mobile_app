@@ -4,41 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import StorageProvider from "../services/StorageProvider";
 import Constants from "../utils/Constants";
-
-function getMemberInfo(id) {
-    return new Promise((resolve, reject) => {
-        StorageProvider.getData("token")
-            .then(token => fetch(Constants.url + "members/" + id + '?token=' + token))
-            .then(res => res.json())
-            .then(json => resolve(json))
-    })
-}
-
-function editMember(member, navigation) {
-    //return new Promise((resolve, reject) => {
-        StorageProvider.getData("token")
-            .then(token => fetch(Constants.url + 'members?token=' + token, {
-                method: 'PUT',
-                body: JSON.stringify({
-                    _id: member._id,
-                    name: member.name,
-                    surname: member.surname,
-                    email: member.email,
-                    birthDate: member.birthDate,
-                    clubId: member.clubId,
-                    licenseNumber: member.licenseNumber,
-                    type: member.type,
-                    password: member.password,
-                    responsibilityAgreementSigned: (member.responsibilityAgreementSigned === "true" && true) || false
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            }))
-            .then(res => res.json())
-            .then(()=>navigation.navigate('Dashboard'))
-    
-}
+import ApiService from "../services/ApiService";
 
 handleMemberAttribute = (text, attribute, onChangeUserInfo) =>{
     //userInfo && (userInfo[attribute] = text);
@@ -99,7 +65,7 @@ function EditMemberInfo({ route, navigation }) {
     }
 
     React.useEffect(() => {
-        getMemberInfo(_id)
+        ApiService.getMemberInfo(_id)
             .then(userInfo => onChangeUserInfo(userInfo))
     }, []);
 
@@ -172,7 +138,7 @@ function EditMemberInfo({ route, navigation }) {
                     value={""}
                 />
                 <Text>{"\n"}</Text>
-                <Button title="Edit info" Style={{ paddingBottom: 20 }} onPress={() => editMember(userInfo, navigation)} />
+                <Button title="Edit info" Style={{ paddingBottom: 20 }} onPress={() => ApiService.editMember(userInfo, navigation)} />
             </ScrollView>
         </View>
     );

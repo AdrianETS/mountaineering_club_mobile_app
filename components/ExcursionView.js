@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import StorageProvider from "../services/StorageProvider";
 import Constants from "../utils/Constants";
+import ApiService from "../services/ApiService";
 
 
 const styles = StyleSheet.create({
@@ -20,36 +21,7 @@ const styles = StyleSheet.create({
     },
 });
 
-function getExcursionInfo(id) {
-    return new Promise((resolve, reject) => {
-        StorageProvider.getData("token")
-            .then(token => fetch(Constants.url + 'excursions/' + id + '?token=' + token))
-            .then(res => res.json())
-            .then((json) => {
-                resolve(json)
-            })
-    })
-}
 
-function editExcursion(excursion) {
-    return new Promise((resolve, reject) => {
-        StorageProvider.getData("token")
-            .then(token => fetch(Constants.url + 'excursions?token=' + token, {
-                method: 'PUT',
-                body: JSON.stringify({
-                    _id: excursion._id,
-                    name: excursion.name,
-                    date: excursion.date,
-                    users_id: excursion.users_id
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            }))
-            .then(res => res.json())
-            .then(json => resolve(json));
-    })
-}
 
 function checkUserIsInExcursion(users) {
     return new Promise((resolve, reject) => {
@@ -70,7 +42,7 @@ function addUserToExcursion(excursion) {
             })
             .then(excursion => {
                 console.log("2Excursion ids: " + JSON.stringify(excursion));
-                return editExcursion(excursion)
+                return ApiService.editExcursion(excursion)
             })
             .then(excursion => {
                 console.log("edit excursion nos devuelve: " + JSON.stringify(excursion));
@@ -88,7 +60,7 @@ function deleteUserFromExcursion(excursion) {
             })
             .then(excursion => {
                 console.log("4Excursion ids: " + JSON.stringify(excursion));
-                return editExcursion(excursion)
+                return ApiService.editExcursion(excursion)
             })
             .then(excursion => resolve(excursion));
     })
@@ -112,7 +84,7 @@ function ExcursionView({ route, navigation }) {
     const [userIsAdded, onChangeuserIsAdded] = React.useState(null);
 
     React.useEffect(() => {
-        getExcursionInfo(_id)
+        ApiService.getExcursionInfo(_id)
             .then(excursion => {
                 onChangeexcursionInfo(excursion);
                 return excursion;

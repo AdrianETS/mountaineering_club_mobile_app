@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import StorageProvider from "../services/StorageProvider";
 import Constants from "../utils/Constants";
+import ApiService from "../services/ApiService";
 
 
 const styles = StyleSheet.create({
