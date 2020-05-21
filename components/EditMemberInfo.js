@@ -8,7 +8,7 @@ import Constants from "../utils/Constants";
 function getMemberInfo(id) {
     return new Promise((resolve, reject) => {
         StorageProvider.getData("token")
-            .then(token => fetch(Constants.url + id + '?token=' + token))
+            .then(token => fetch(Constants.url + "members/" + id + '?token=' + token))
             .then(res => res.json())
             .then(json => resolve(json))
     })
